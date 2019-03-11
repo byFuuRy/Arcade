@@ -1,4 +1,9 @@
 #!/bin/bash
 
+git clone --mirror git@github.com:byFuuRy/Arcade.git
+cd Arcade.git
+git remote set-url --push origin git@git.epitech.eu:/florent.piccinini@epitech.eu/OOP_arcade_2018
 git fetch -p origin
 git push --mirror
+cd ..
+rm -rf Arcade.git
