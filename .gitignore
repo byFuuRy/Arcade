@@ -1,0 +1,16 @@
+# Project specific
+Main.cpp
+Makefile
+*.so
+
+# Object files
+*.o
+
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+build/
+
+# VSCode files
+.vscode/
