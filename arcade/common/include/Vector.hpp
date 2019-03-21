@@ -14,6 +14,7 @@ struct Vector {
 	
 	Vector(const Vector& v) noexcept = default;
 	Vector(double x, double y) noexcept;
+    Vector(const Vector& v) noexcept;
 	~Vector() = default;
 
 	Vector &operator+=(const Vector &vec) noexcept;
