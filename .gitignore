@@ -6,6 +6,9 @@ Makefile
 # Object files
 *.o
 
+# Data files
+*.gch
+
 # CMake files
 CMakeCache.txt
 CMakeFiles/
