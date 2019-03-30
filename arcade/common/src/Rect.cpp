@@ -13,6 +13,6 @@ Rect::Rect(const Vector &pos, const Vector &size) noexcept
 }
 
 Rect::Rect(double x, double y, double w, double h) noexcept 
-: pos(x, y), size(x, y)
+: pos(x, y), size(w, h)
 {
 }

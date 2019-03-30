@@ -9,13 +9,16 @@
 #define IGAME_HPP_
 
 #include "IRenderer.hpp"
+#include "IGraphicLib.hpp"
 
 class IGame {
 public:
 	virtual ~IGame() = default;
 
-	virtual bool tick() = 0;   // Logic / Physics
-	virtual bool render(IRenderer *) = 0; // Draw stuff
+	virtual void init(IGraphicLib *) = 0;
+	virtual void tick(IGraphicLib *, double deltaTime) = 0;   // Logic / Physics
+	virtual void render(IGraphicLib *) = 0;                   // Draw stuff
+	virtual void reloadResources(IGraphicLib *) = 0;          // Graphic lib changed
 	virtual bool isCloseRequested() const noexcept = 0;
 };
 
