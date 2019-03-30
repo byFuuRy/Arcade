@@ -2,30 +2,26 @@
 ** EPITECH PROJECT, 2019
 ** Arcade
 ** File description:
-** NcursesRenderer
+** SFMLRenderer
 */
 
 #pragma once
 
-#include <curses.h>
-#include <ncurses.h>
 #include <stdexcept>
 #include "../../../core/include/IRenderer.hpp"
-#include "ASprite.hpp"
 
-class NcursesRenderer : public IRenderer {
+class SFMLRenderer : public IRenderer {
 	public:
-		NcursesRenderer();
-		~NcursesRenderer();
+		SFMLRenderer();
+		~SFMLRenderer();
 
 	    void drawRectangle(const Rect &rect, const Color &color, bool fill = true);
+	    void drawLine(const Vector &start, const Vector &end, const Color &color);
+	    void drawTexture(const std::string &imagePath, const Vector &pos);
 	    void drawText(const std::string &text, uint8_t fontSize, const Vector &pos, const Color &color);
-        void drawSprite(const ASprite *sprite);
 
 	    void display();
 	    void clear();
-
-        WINDOW *_window = nullptr;
 
 	protected:
         short nbWin = 0;
