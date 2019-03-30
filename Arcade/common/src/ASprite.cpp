@@ -6,28 +6,32 @@
 */
 
 #include "ASprite.hpp"
-    
+
+ASprite::ASprite(const ATexture *texture, const Rect &spriteSheetRect, const Rect &posAndSize)
+	: _texture(texture), _spriteSheetRect(spriteSheetRect), _posAndSize(posAndSize)
+{}
+
 const ATexture *ASprite::getTexture() const noexcept
 {
-    return _texture;
+	return this->_texture;
 }
 
 const Rect &ASprite::getSpriteSheetRect() const
 {
-    return _spriteSheetRect;
+	return this->_spriteSheetRect;
 }
 
 const Rect &ASprite::getPosAndSize() const
 {
-    return _posAndSize;
+	return this->_posAndSize;
 }
 
 const Color &ASprite::getFallbackColor() const
 {
-    return _fallbackColor;
+	return this->_fallbackColor;
 }
 
 void ASprite::setFallbackColor(const Color &color) noexcept
 {
-    _fallbackColor = color;
+	this->_fallbackColor = color;
 }

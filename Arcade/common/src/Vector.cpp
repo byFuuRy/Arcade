@@ -5,7 +5,7 @@
 ** Vector
 */
 
-#include "../include/Vector.hpp"
+#include "Vector.hpp"
 
 Vector::Vector(double x, double y) noexcept
 {

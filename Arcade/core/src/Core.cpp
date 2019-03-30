@@ -30,11 +30,8 @@ Core::Core(const std::string &libName)
 		this->_error = libName + ": " + "File does not exist.";
 		throw std::runtime_error(this->_error);
 	}
-	addGameLib("./games/lib_arcade_centipede.so");
-	addGameLib("./games/lib_arcade_2.so");
-	addGraphicLib("./lib/lib_arcade_sfml_test.so");
+	addGameLib("./games/lib_arcade_nibbler.so");
 	addGraphicLib("./lib/lib_arcade_ncurses.so");
-	addGraphicLib("./lib/lib_arcade_sdl2.so");
 }
 
 void Core::addGraphicLib(const std::string &libName)
@@ -68,7 +65,7 @@ IGraphicLib *Core::getGraphicLibInstance() const
 
 	if (this->_graphic._currentLib == nullptr)
 		return nullptr;
-	f = reinterpret_cast<getInstance *>(dlsym(this->_graphic._currentLib, "getInstance"));
+	f = reinterpret_cast<getInstance *>(dlsym(this->_graphic._currentLib, "getGraphicalInstance"));
 	if (f == nullptr)
 		return nullptr;
 	return f();
