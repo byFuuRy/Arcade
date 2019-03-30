@@ -2,6 +2,7 @@
 Main.cpp
 Makefile
 *.so
+arcade
 
 # Valgrind files
 vgcore*

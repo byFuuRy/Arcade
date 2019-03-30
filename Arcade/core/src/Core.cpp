@@ -30,7 +30,7 @@ Core::Core(const std::string &libName)
 		this->_error = libName + ": " + "File does not exist.";
 		throw std::runtime_error(this->_error);
 	}
-	addGameLib("./games/lib_arcade_nibbler.so");
+	addGameLib("./games/lib_arcade_centipede.so");
 	addGraphicLib("./lib/lib_arcade_ncurses.so");
 }
 
