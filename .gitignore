@@ -3,8 +3,14 @@ Main.cpp
 Makefile
 *.so
 
+# Valgrind files
+vgcore*
+
 # Object files
 *.o
+
+# Data files
+*.gch
 
 # CMake files
 CMakeCache.txt
