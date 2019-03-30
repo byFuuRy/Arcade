@@ -3,6 +3,9 @@ Main.cpp
 Makefile
 *.so
 
+# Valgrind files
+vgcore*
+
 # Object files
 *.o
 
