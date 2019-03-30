@@ -30,6 +30,8 @@ private:
 	void addGameLib(const std::string &lib_name);
 	void nextGraphicLib();
 	void nextGameLib();
+	IGraphicLib *getGraphicObject() const;
+	IGame *getGameObject() const;
 	
 	struct Lib {
 		std::string _currentPath;
@@ -40,6 +42,7 @@ private:
 	
 	Lib _graphic;
 	Lib _game;
+	double _deltaTime;
 	std::string _error;
 };
 

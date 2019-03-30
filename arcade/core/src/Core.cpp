@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <iostream>
+#include <chrono>
 
 #include "Core.hpp"
 
@@ -31,7 +32,7 @@ Core::Core(const std::string &libName)
 	}
 	addGameLib("./games/lib_arcade_centipede.so");
 	addGameLib("./games/lib_arcade_2.so");
-	addGraphicLib("./lib/lib_arcade_sfml.so");
+	addGraphicLib("./lib/lib_arcade_sfml_test.so");
 	addGraphicLib("./lib/lib_arcade_ncurses.so");
 	addGraphicLib("./lib/lib_arcade_sdl2.so");
 }
@@ -80,7 +81,7 @@ IGame *Core::getGameInstance() const
 
 	if (this->_game._currentLib == nullptr)
 		return nullptr;
-	f = reinterpret_cast<getInstance*>(dlsym(this->_game._currentLib, "getInstance"));
+	f = reinterpret_cast<getInstance*>(dlsym(this->_game._currentLib, "getGameInstance"));
 	if (f == nullptr)
 		return nullptr;
 	return f();
@@ -123,6 +124,7 @@ void Core::loadGraphic(const std::string &libPath)
 	this->_graphic._currentLib = dlopen(libPath.c_str(), RTLD_LAZY);
 	if (this->_graphic._currentLib == nullptr)
 		throw std::runtime_error(dlerror());
+	this->_graphic._currentPath = libPath;
 }
 
 void Core::loadGame(const std::string &libPath)
@@ -130,22 +132,38 @@ void Core::loadGame(const std::string &libPath)
 	this->_game._currentLib = dlopen(libPath.c_str(), RTLD_LAZY);
 	if (this->_game._currentLib == nullptr)
 		throw std::runtime_error(dlerror());
+	this->_game._currentPath = libPath;
+}
+
+IGraphicLib *Core::getGraphicObject() const
+{
+	return static_cast<IGraphicLib*>(this->_graphic._currentObject);
+}
+
+IGame *Core::getGameObject() const
+{
+	return static_cast<IGame*>(this->_game._currentObject);
 }
 
 void Core::mainLoop()
 {
-	std::cout << this->_graphic._listLib.front() << std::endl;
-	std::cout << this->_game._listLib.front() << std::endl;
 	loadGraphic(this->_graphic._listLib.front());
 	loadGame(this->_game._listLib.front());
 	this->_graphic._currentObject = getGraphicLibInstance();
 	this->_game._currentObject = getGameInstance();
-	if (this->_graphic._currentObject == nullptr || this->_game._currentObject == nullptr)
-		throw std::runtime_error("Can't start loop");
-	std::cout << "AAAAAAAA" << std::endl;
+	if (this->_graphic._currentObject == nullptr)
+		throw std::runtime_error("Graphic null");
+	if (this->_game._currentObject == nullptr)
+		throw std::runtime_error("Game null");
 	
-	while(42) {
-		reinterpret_cast<IGame*>(this->_game._currentObject)->tick();
-		reinterpret_cast<IGame*>(this->_game._currentObject)->render(&reinterpret_cast<IGraphicLib*>(this->_graphic._currentObject)->getRenderer());
+	getGameObject()->init(getGraphicObject());
+	while (!getGraphicObject()->isCloseRequested() && !getGameObject()->isCloseRequested()) {
+		auto start = std::chrono::system_clock::now();
+		getGraphicObject()->pollEvents();
+		getGameObject()->tick(getGraphicObject(), this->_deltaTime);
+		getGameObject()->render(getGraphicObject());
+		auto end = std::chrono::system_clock::now();
+		std::chrono::duration<double> elapsed = end - start;
+		this->_deltaTime = elapsed.count();
 	}
 }
