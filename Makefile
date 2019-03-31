@@ -43,6 +43,13 @@ SFML_SRC=	Arcade/graphicals/sfml/src/SFMLGraphicLib.cpp	\
 			Arcade/graphicals/sfml/src/SFMLTexture.cpp
 
 SFML_OBJ=	$(SFML_SRC:.cpp=.o)
+
+SDL2_SRC=	Arcade/graphicals/sdl2/src/SDLGraphicLib.cpp	\
+			Arcade/graphicals/sdl2/src/SDLRenderer.cpp		\
+			Arcade/graphicals/sdl2/src/SDLSprite.cpp		\
+			Arcade/graphicals/sdl2/src/SDLTexture.cpp
+
+SDL2_OBJ=	$(SDL2_SRC:.cpp=.o)
 ##############################
 
 ############ GAME ############
@@ -73,6 +80,12 @@ $(SFML):	LDFLAGS	=	-lsfml-graphics -lsfml-window -lsfml-system -shared
 $(SFML):	$(SFML_OBJ) $(COMMON_OBJ)
 			$(CXX) -o $(SFML) $(COMMON_OBJ) $(SFML_OBJ) $(LDFLAGS)
 
+$(SDL2):	INCLUDES+=	-iquote Arcade/graphicals/sdl2/include
+$(SDL2):	CXXFLAGS+=	$(INCLUDES) -fPIC
+$(SDL2):	LDFLAGS	=	-lSDL2 -lSDL2_ttf -lSDL2_image -shared
+$(SDL2):	$(SDL2_OBJ) $(COMMON_OBJ)
+			$(CXX) -o $(SDL2) $(COMMON_OBJ) $(SDL2_OBJ) $(LDFLAGS)
+
 $(NIBBLER):	INCLUDES+=	-iquote Arcade/games/nibbler/include
 $(NIBBLER):	CXXFLAGS+=	$(INCLUDES) -fPIC
 $(NIBBLER):	LDFLAGS	=	-shared
@@ -82,7 +95,7 @@ $(NIBBLER):	$(NIBBLER_OBJ) $(COMMON_OBJ)
 
 core:		$(CORE)
 
-graphicals:	$(NCUR) $(SFML)
+graphicals:	$(NCUR) $(SFML) $(SDL2)
 
 games:		$(NIBBLER)
 
@@ -91,12 +104,14 @@ clean:
 			$(RM) $(CORE_OBJ)
 			$(RM) $(NCUR_OBJ)
 			$(RM) $(SFML_OBJ)
+			$(RM) $(SDL2_OBJ)
 			$(RM) $(NIBBLER_OBJ)
 
 fclean:		clean
 			$(RM) $(CORE)
 			$(RM) $(NCUR)
 			$(RM) $(SFML)
+			$(RM) $(SDL2)
 			$(RM) $(NIBBLER)
 
 re:			fclean all
