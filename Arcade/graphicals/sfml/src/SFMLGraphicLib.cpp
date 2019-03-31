@@ -48,6 +48,7 @@ void SFMLGraphicLib::pollEvents()
             case sf::Keyboard::F5: this->_coreKey |= RESTART_GAME; break;
             case 27: this->_coreKey |= BACK_TO_MENU; break;
             case sf::Keyboard::F9: this->_coreKey |= EXIT; break;
+            default: break;
         }
     }
 }

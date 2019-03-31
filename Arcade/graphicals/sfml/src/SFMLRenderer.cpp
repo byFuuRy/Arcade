@@ -7,8 +7,6 @@
 
 #include "SFMLRenderer.hpp"
 
-#define RGBN(x) x * 1000 / 255
-
 SFMLRenderer::SFMLRenderer()
 {
     this->_font.loadFromFile("res/arcade.ttf");

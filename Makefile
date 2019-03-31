@@ -36,6 +36,13 @@ NCUR_SRC=	Arcade/graphicals/ncurses/src/NCursesGraphicLib.cpp	\
 			Arcade/graphicals/ncurses/src/NCursesTexture.cpp
 
 NCUR_OBJ=	$(NCUR_SRC:.cpp=.o)
+
+SFML_SRC=	Arcade/graphicals/sfml/src/SFMLGraphicLib.cpp	\
+			Arcade/graphicals/sfml/src/SFMLRenderer.cpp		\
+			Arcade/graphicals/sfml/src/SFMLSprite.cpp		\
+			Arcade/graphicals/sfml/src/SFMLTexture.cpp
+
+SFML_OBJ=	$(SFML_SRC:.cpp=.o)
 ##############################
 
 ############ GAME ############
@@ -60,15 +67,22 @@ $(NCUR):	LDFLAGS	=	-lncurses -shared
 $(NCUR):	$(NCUR_OBJ) $(COMMON_OBJ)
 			$(CXX) -o $(NCUR) $(COMMON_OBJ) $(NCUR_OBJ) $(LDFLAGS)
 
+$(SFML):	INCLUDES+=	-iquote Arcade/graphicals/sfml/include
+$(SFML):	CXXFLAGS+=	$(INCLUDES) -fPIC
+$(SFML):	LDFLAGS	=	-lsfml-graphics -lsfml-window -lsfml-system -shared
+$(SFML):	$(SFML_OBJ) $(COMMON_OBJ)
+			$(CXX) -o $(SFML) $(COMMON_OBJ) $(SFML_OBJ) $(LDFLAGS)
+
 $(NIBBLER):	INCLUDES+=	-iquote Arcade/games/nibbler/include
 $(NIBBLER):	CXXFLAGS+=	$(INCLUDES) -fPIC
 $(NIBBLER):	LDFLAGS	=	-shared
 $(NIBBLER):	$(NIBBLER_OBJ) $(COMMON_OBJ)
 			$(CXX) -o $(NIBBLER) $(COMMON_OBJ) $(NIBBLER_OBJ) $(LDFLAGS)
 
+
 core:		$(CORE)
 
-graphicals:	$(NCUR)
+graphicals:	$(NCUR) $(SFML)
 
 games:		$(NIBBLER)
 
@@ -76,11 +90,13 @@ clean:
 			$(RM) $(COMMON_OBJ)
 			$(RM) $(CORE_OBJ)
 			$(RM) $(NCUR_OBJ)
+			$(RM) $(SFML_OBJ)
 			$(RM) $(NIBBLER_OBJ)
 
 fclean:		clean
 			$(RM) $(CORE)
 			$(RM) $(NCUR)
+			$(RM) $(SFML)
 			$(RM) $(NIBBLER)
 
 re:			fclean all
