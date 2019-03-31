@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <iostream>
 #include <chrono>
+#include <filesystem>
+#include <regex>
 
 #include "Core.hpp"
 
@@ -32,7 +34,6 @@ Core::Core(const std::string &libName)
 	}
 	addGameLib("./games/lib_arcade_nibbler.so");
 	addGraphicLib("./lib/lib_arcade_sfml.so");
-//	addGraphicLib("./lib/lib_arcade_sfml_maxime.so");
 }
 
 void Core::addGraphicLib(const std::string &libName)
@@ -78,10 +79,10 @@ IGame *Core::getGameInstance() const
 	getInstance *f;
 
 	if (this->_game._currentLib == nullptr)
-		return nullptr;
+		throw std::runtime_error("Current graphic library is unknown.");
 	f = reinterpret_cast<getInstance*>(dlsym(this->_game._currentLib, "getGameInstance"));
 	if (f == nullptr)
-		return nullptr;
+		throw std::runtime_error("Can't load the game instance.");
 	return f();
 }
 
@@ -149,10 +150,6 @@ void Core::mainLoop()
 	loadGame(this->_game._listLib.front());
 	this->_graphic._currentObject = getGraphicLibInstance();
 	this->_game._currentObject = getGameInstance();
-	if (this->_graphic._currentObject == nullptr)
-		throw std::runtime_error("Graphic null");
-	if (this->_game._currentObject == nullptr)
-		throw std::runtime_error("Game null");
 	
 	getGameObject()->init(getGraphicObject());
 	while (!getGraphicObject()->isCloseRequested() && !getGameObject()->isCloseRequested()) {

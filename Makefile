@@ -56,8 +56,8 @@ CXXFLAGS=	-Wall -Wextra
 
 all:		core graphicals games
 
-$(CORE):	CXXFLAGS+=	$(INCLUDES) -fPIC
-$(CORE):	LDFLAGS	=	-ldl
+$(CORE):	CXXFLAGS+=	$(INCLUDES) -fPIC -std=c++17
+$(CORE):	LDFLAGS	=	-ldl -lstdc++fs
 $(CORE):	$(CORE_OBJ) $(COMMON_OBJ)
 			$(CXX) -o $(CORE) $(COMMON_OBJ) $(CORE_OBJ) $(LDFLAGS)
 
