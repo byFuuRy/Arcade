@@ -12,6 +12,8 @@ SFMLRenderer::SFMLRenderer()
     _size = {800, 800};
     this->_font.loadFromFile("res/arcade.ttf");
     this->_window = new sf::RenderWindow(sf::VideoMode(_size.x, _size.y), "Arcade");
+    if (!_window)
+        throw std::runtime_error("Cannot open SFML window");
 }
 
 SFMLRenderer::~SFMLRenderer()
@@ -43,7 +45,6 @@ void SFMLRenderer::drawText(const std::string &text, uint8_t size, const Vector 
     sfText.setFont(_font);
     sfText.setString(text);
     sfText.setPosition(sfVector2f);
-    //sfText.setScale({static_cast<float>(size), static_cast<float>(size)});
     sfText.setCharacterSize(size);
     _window->draw(sfText);
 }

@@ -29,6 +29,7 @@ SDLRenderer::SDLRenderer()
     if (_renderer == nullptr)
         throw std::runtime_error("Cannot open SDL2 window");
     SDLSprite::getRenderer(_renderer);
+    SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
 }
 
 SDLRenderer::~SDLRenderer()
@@ -45,6 +46,8 @@ void SDLRenderer::drawRectangle(const Rect& rect, const Color& color, bool fill)
     sdlRect.y = rect.pos.y * 800.0;
     sdlRect.w = rect.size.x * 800.0;
     sdlRect.h = rect.size.y * 800.0;
+    if (fill)
+        SDL_RenderFillRect(_renderer, &sdlRect);
     SDL_RenderDrawRect(_renderer, &sdlRect);
 }
 
@@ -57,14 +60,16 @@ void SDLRenderer::drawText(const std::string& text, uint8_t size, const Vector& 
         color.a
     };
     SDL_Surface *surfaceMessage = TTF_RenderText_Solid(_font, text.c_str(), Color);
-    SDL_Texture *Message = SDL_CreateTextureFromSurface(_renderer, surfaceMessage);
+    SDL_Texture *message = SDL_CreateTextureFromSurface(_renderer, surfaceMessage);
     SDL_Rect Message_rect;
 
     Message_rect.x = pos.x * _size.first;
     Message_rect.y = pos.y * _size.second;
-    Message_rect.w = size * 100;
-    Message_rect.h = size * 70;
-    SDL_RenderCopy(_renderer, Message, NULL, &Message_rect);
+    Message_rect.h = size;
+    Message_rect.w = size * text.length() / 2;
+    SDL_RenderCopy(_renderer, message, NULL, &Message_rect);
+    SDL_FreeSurface(surfaceMessage);
+    SDL_DestroyTexture(message);
 }
 
 void SDLRenderer::display()
