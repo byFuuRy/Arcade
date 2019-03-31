@@ -36,10 +36,10 @@ void SFMLGraphicLib::pollEvents()
             case sf::Keyboard::Down: this->_gameKey |= DOWN; break;
             case sf::Keyboard::Left: this->_gameKey |= LEFT; break;
             case sf::Keyboard::Right: this->_gameKey |= RIGHT; break;
-            case 'x': this->_gameKey |= PRIMARY; break;
-            case 'c': this->_gameKey |= SECONDARY; break;
-            case 'b': this->_gameKey |= START; break;
-            case 'n': this->_gameKey |= SELECT; break;
+            case sf::Keyboard::X: this->_gameKey |= PRIMARY; break;
+            case sf::Keyboard::C: this->_gameKey |= SECONDARY; break;
+            case sf::Keyboard::B: this->_gameKey |= START; break;
+            case sf::Keyboard::N: this->_gameKey |= SELECT; break;
 
             case sf::Keyboard::F1: this->_coreKey |= PREV_GRAPHICAL_LIB; break;
             case sf::Keyboard::F2: this->_coreKey |= NEXT_GRAPHICAL_LIB; break;

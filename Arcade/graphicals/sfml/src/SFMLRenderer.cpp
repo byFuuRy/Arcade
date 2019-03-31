@@ -39,7 +39,7 @@ void SFMLRenderer::drawText(const std::string &text, uint8_t, const Vector &pos,
     sf::Color sfColor(color.r, color.g, color.b, color.a);
     sf::Vector2f sfVector2f(pos.x * _size.x, pos.y * _size.y);
 
-    sfText.setColor(sfColor);
+    sfText.setFillColor(sfColor);
     sfText.setFont(_font);
     sfText.setString(text);
     sfText.setPosition(sfVector2f);
