@@ -1,6 +1,4 @@
 # Project specific
-Main.cpp
-Makefile
 *.so
 arcade
 
