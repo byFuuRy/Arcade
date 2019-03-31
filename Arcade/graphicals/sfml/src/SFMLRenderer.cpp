@@ -33,7 +33,7 @@ void SFMLRenderer::drawRectangle(const Rect &rect, const Color &color, bool fill
     _window->draw(rectangle);
 }
 
-void SFMLRenderer::drawText(const std::string &text, uint8_t, const Vector &pos, const Color &color)
+void SFMLRenderer::drawText(const std::string &text, uint8_t size, const Vector &pos, const Color &color)
 {
     sf::Text sfText;
     sf::Color sfColor(color.r, color.g, color.b, color.a);
@@ -43,6 +43,7 @@ void SFMLRenderer::drawText(const std::string &text, uint8_t, const Vector &pos,
     sfText.setFont(_font);
     sfText.setString(text);
     sfText.setPosition(sfVector2f);
+    sfText.setScale({static_cast<float>(size), static_cast<float>(size)});
     _window->draw(sfText);
 }
 
