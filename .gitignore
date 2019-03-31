@@ -1,5 +1,4 @@
 # Project specific
-*.so
 arcade
 
 # Valgrind files
