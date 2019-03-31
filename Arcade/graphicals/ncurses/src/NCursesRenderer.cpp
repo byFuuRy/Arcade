@@ -9,16 +9,19 @@
 
 #include "NCursesRenderer.hpp"
 
-#define RGBN(x) x * 1000 / 255
+#define RGBN(x) (x * 1000 / 255)
 
 NCursesRenderer::NCursesRenderer()
 {
-    initscr();
-    this->_window = newwin(40, 80, 0, 0);
+    if (initscr() == nullptr)
+        throw std::runtime_error("Can't initialize nCurses sreen.");
+    this->_window = newwin(this->_h, this->_w, (LINES / 2) - (this->_h / 2), (COLS / 2) - (this->_w / 2));
+    if (this->_window == nullptr)
+        throw std::runtime_error("Can't create nCurses window.");
     nodelay(this->_window, true);
     timeout(0);
     keypad(this->_window, true);
-    curs_set(FALSE);
+    curs_set(0);
     noecho();
 }
 
@@ -28,50 +31,51 @@ NCursesRenderer::~NCursesRenderer()
     endwin();
 }
 
+void NCursesRenderer::_colorInitialization(const Color &color, bool fill)
+{
+    init_color(++this->_colorReference, static_cast<short>(RGBN(color.r)),
+        static_cast<short>(RGBN(color.g)), static_cast<short>(RGBN(color.b)));
+    init_pair(this->_colorReference, this->_colorReference, static_cast<short>(fill ? this->_colorReference : COLOR_BLACK));
+}
+
 void NCursesRenderer::drawRectangle(const Rect &rect, const Color &color, bool fill)
 {
-    WINDOW *win = newwin(rect.size.y + 1, rect.size.x + 1, rect.pos.y, rect.pos.x);
-
-    init_color(COLOR_CYAN, RGBN(color.r), RGBN(color.g), RGBN(color.b));
-    init_pair(1, COLOR_CYAN, COLOR_CYAN);
-    if (fill) {
-        wbkgd(win, COLOR_PAIR(1));
-        box(win, 0, 0);
-    } else {
-        wattron(win, COLOR_PAIR(1));
-        box(win, 0, 0);
-        wattroff(win, COLOR_PAIR(1));
+    this->_colorInitialization(color, fill);
+    wattron(this->_window, COLOR_PAIR(this->_colorReference));
+    for (size_t y = 0; y < rect.size.y * this->_h; y++) {
+        for (size_t x = 0; x < rect.size.x * this->_w; x++) {
+            mvwaddch(this->_window, rect.pos.y * this->_h + static_cast<double>(y) / this->_h,
+                    rect.pos.x * this->_w + static_cast<double>(x) / this->_w, 0);
+        }
     }
-    touchwin(win);
-    wrefresh(win);
-    ++nbWin;
+    wattroff(this->_window, COLOR_PAIR(this->_colorReference));
 }
 
 void NCursesRenderer::drawText(const std::string &text, uint8_t, const Vector &pos, const Color &color)
 {
-    init_color(COLOR_CYAN, RGBN(color.r), RGBN(color.g), RGBN(color.b));
-    init_pair(1, COLOR_BLACK, COLOR_CYAN);
-    wattron(this->_window, COLOR_PAIR(1));
-    mvwprintw(this->_window, 1,1,"colored text");
-
-    wmove(this->_window, pos.y, pos.x);
-    wprintw(this->_window, text.c_str());
-}
-
-void NCursesRenderer::display()
-{
-    wrefresh(this->_window);
-    for (; nbWin > 0; --nbWin)
-        endwin();
-}
-
-void NCursesRenderer::clear()
-{
-    erase();
-    werase(this->_window);
+    this->_colorInitialization(color);
+    wattron(this->_window, COLOR_PAIR(this->_colorReference));
+    mvwaddstr(this->_window, static_cast<int>(pos.y * this->_h), static_cast<int>(pos.x * this->_w), text.c_str());
+    wattroff(this->_window, COLOR_PAIR(this->_colorReference));
 }
 
 void NCursesRenderer::drawSprite(const ASprite *sprite)
 {
     this->drawRectangle(sprite->getPosAndSize(), sprite->getFallbackColor(), true);             
 }
+
+void NCursesRenderer::display()
+{
+    wnoutrefresh(this->_window);
+    doupdate();
+}
+
+void NCursesRenderer::clear()
+{
+    werase(this->_window);
+    wresize(this->_window, this->_h, this->_w);
+    mvwin(this->_window, (LINES / 2) - (this->_h / 2), (COLS / 2) - (this->_w / 2));
+    //wmove(this->_window, (LINES / 2) - (this->_h / 2), (COLS / 2) - (this->_w / 2));
+    this->_colorReference = 0;
+}
+

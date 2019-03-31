@@ -42,7 +42,7 @@ private:
 	
 	Lib _graphic;
 	Lib _game;
-	double _deltaTime;
+	double _deltaTime = 0;
 	std::string _error;
 };
 

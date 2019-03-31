@@ -27,10 +27,13 @@ public:
 	void display();
 	void clear();
 
+private:
+	void _colorInitialization(const Color &color, bool fill = false);
+	
 	WINDOW *_window = nullptr;
-
-protected:
-	short nbWin = 0;
+	const uint8_t _w = 80;
+	const uint8_t _h = 40;
+	short _colorReference = 0;
 };
 
 #endif /* !NCURSES_RENDERER_HPP_ */
