@@ -9,8 +9,9 @@
 
 SFMLRenderer::SFMLRenderer()
 {
+    _size = {800, 800};
     this->_font.loadFromFile("res/arcade.ttf");
-    this->_window = new sf::RenderWindow(sf::VideoMode(800, 800), "Arcade");
+    this->_window = new sf::RenderWindow(sf::VideoMode(_size.x, _size.y), "Arcade");
 }
 
 SFMLRenderer::~SFMLRenderer()
@@ -20,10 +21,15 @@ SFMLRenderer::~SFMLRenderer()
 
 void SFMLRenderer::drawRectangle(const Rect &rect, const Color &color, bool fill)
 {
-    sf::Vector2f size(rect.size.x, rect.size.y);
+    sf::Vector2f size(rect.size.x * _size.x, rect.size.y * _size.y);
     sf::RectangleShape rectangle(size);
+    sf::Color sfColor(color.r, color.g, color.b, color.a);
 
-    rectangle.setPosition(rect.pos.x, rect.pos.y);
+    if (fill)
+        rectangle.setFillColor(sfColor);
+    else
+        rectangle.setFillColor(sf::Color::Transparent);
+    rectangle.setPosition(rect.pos.x * _size.x, rect.pos.y * _size.y);
     _window->draw(rectangle);
 }
 
@@ -31,7 +37,7 @@ void SFMLRenderer::drawText(const std::string &text, uint8_t, const Vector &pos,
 {
     sf::Text sfText;
     sf::Color sfColor(color.r, color.g, color.b, color.a);
-    sf::Vector2f sfVector2f(pos.x, pos.y);
+    sf::Vector2f sfVector2f(pos.x * _size.x, pos.y * _size.y);
 
     sfText.setColor(sfColor);
     sfText.setFont(_font);

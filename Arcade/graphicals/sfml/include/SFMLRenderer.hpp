@@ -29,6 +29,7 @@ public:
 	void clear();
 
 	sf::RenderWindow *_window = nullptr;
+    sf::Vector2f _size;
 
 protected:
     sf::Font _font;

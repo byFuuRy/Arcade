@@ -31,7 +31,8 @@ Core::Core(const std::string &libName)
 		throw std::runtime_error(this->_error);
 	}
 	addGameLib("./games/lib_arcade_nibbler.so");
-	addGraphicLib("./lib/lib_arcade_ncurses2.so");
+	addGraphicLib("./lib/lib_arcade_sfml.so");
+//	addGraphicLib("./lib/lib_arcade_sfml_maxime.so");
 }
 
 void Core::addGraphicLib(const std::string &libName)
