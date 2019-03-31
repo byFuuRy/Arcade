@@ -182,6 +182,7 @@ void Core::prevGameLib()
 		this->_error = *(it + 1) + ": " + "Can't load the game.";
 		throw std::runtime_error(this->_error);
 	}
+    this->getGameObject()->init(this->getGraphicObject());
 }
 
 void Core::close()
@@ -284,28 +285,32 @@ void Core::Menu::printNames(Core &core)
 
 bool Core::Menu::setNewPath(Core &core)
 {
-	for (const auto &pair : this->_graphicName)
-		if (pair.first == this->_focused) {
-			delete core.getGraphicObject();
-			dlclose(core._graphic._currentLib);
-			core._graphic._currentObject = core.getGraphicInstance(pair.second);
-		}
-	for (const auto &pair : this->_gameName)
-		if (pair.first == this->_focused) {
-			delete core.getGameObject();
-			dlclose(core._game._currentLib);
-			core._game._currentObject = core.getGameInstance(pair.second);
-		}
-	this->_focused.erase();
-	return false;
+    for (const auto &pair : this->_graphicName) {
+        if (pair.first == this->_focused) {
+            delete core.getGraphicObject();
+            dlclose(core._graphic._currentLib);
+            core._graphic._currentObject = core.getGraphicInstance(pair.second);
+            this->_focused.clear();
+            return true;
+        }
+    }
+    for (const auto &pair : this->_gameName) {
+        if (pair.first == this->_focused) {
+            core._game._currentPath = pair.second;
+            core.restartGame();
+            this->_focused.clear();
+            return true;
+        }
+    }
+    return false;
 }
 
 void Core::Menu::showMenu(Core &core)
 {
 	if (this->_graphicName.empty())
 		this->setNames(core);
-	this->_active = (core.getGraphicObject()->getGameKeyState() & IGraphicLib::START) ? (this->_focused.size() != 0) ?
-		this->setNewPath(core) : false : true;
+    this->_active = (core.getGraphicObject()->getGameKeyState() & IGraphicLib::START) ? (this->_focused.size() != 0) ?
+    !this->setNewPath(core) : true : true;
 	core.getGraphicObject()->getRenderer().clear();
 	this->printNames(core);
 	core.getGraphicObject()->getRenderer().drawText("Main Menu", 50, Vector(0.41, 0), Color(160, 0, 0));

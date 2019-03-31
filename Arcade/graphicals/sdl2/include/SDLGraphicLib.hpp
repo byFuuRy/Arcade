@@ -19,16 +19,16 @@ class SDLGraphicLib : public IGraphicLib {
 public:
     SDLGraphicLib() = default;
     ~SDLGraphicLib() = default;
-    
+
     uint8_t getGameKeyState() const noexcept;
     uint8_t getCoreKeyState() const noexcept;
     void sendGameKeyInput(GameKey) noexcept {}
     void sendCoreKeyInput(CoreKey) noexcept {}
     void pollEvents();
-    
+
     IRenderer &getRenderer() noexcept;
     bool isCloseRequested() const noexcept;
-    
+
     virtual ATexture *createTexture(const void *buffer, const size_t &len);
     virtual ASprite *createSprite(const ATexture *texture, const Rect &spriteSheetRect, const Rect &posAndSize);
 

@@ -14,6 +14,7 @@ SFML	=	./lib/lib_arcade_sfml.so
 SDL2	=	./lib/lib_arcade_sdl2.so
 NCUR	=	./lib/lib_arcade_ncurses.so
 NIBBLER	=	./games/lib_arcade_nibbler.so
+PACMAN	=	./games/lib_arcade_pacman.so
 
 ############ CORE ############
 COMMON_SRC=	Arcade/common/src/ASprite.cpp	\
@@ -54,8 +55,10 @@ SDL2_OBJ=	$(SDL2_SRC:.cpp=.o)
 
 ############ GAME ############
 NIBBLER_SRC=	Arcade/games/nibbler/src/NibblerGame.cpp
+PACMAN_SRC=	Arcade/games/pacman/src/PacmanGame.cpp
 
 NIBBLER_OBJ=	$(NIBBLER_SRC:.cpp=.o)
+PACMAN_OBJ=	$(PACMAN_SRC:.cpp=.o)
 ##############################
 
 CXX		=	g++
@@ -92,12 +95,18 @@ $(NIBBLER):	LDFLAGS	=	-shared
 $(NIBBLER):	$(NIBBLER_OBJ) $(COMMON_OBJ)
 			$(CXX) -o $(NIBBLER) $(COMMON_OBJ) $(NIBBLER_OBJ) $(LDFLAGS)
 
+$(PACMAN):	INCLUDES+=	-iquote Arcade/games/pacman/include
+$(PACMAN):	CXXFLAGS+=	$(INCLUDES) -fPIC
+$(PACMAN):	LDFLAGS	=	-shared
+$(PACMAN):	$(PACMAN_OBJ) $(COMMON_OBJ)
+			$(CXX) -o $(PACMAN) $(COMMON_OBJ) $(PACMAN_OBJ) $(LDFLAGS)
+
 
 core:		$(CORE)
 
 graphicals:	$(NCUR) $(SFML) $(SDL2)
 
-games:		$(NIBBLER)
+games:		$(NIBBLER) $(PACMAN)
 
 clean:
 			$(RM) $(COMMON_OBJ)
@@ -106,12 +115,14 @@ clean:
 			$(RM) $(SFML_OBJ)
 			$(RM) $(SDL2_OBJ)
 			$(RM) $(NIBBLER_OBJ)
+			$(RM) $(PACMAN_OBJ)
 
 fclean:		clean
 			$(RM) $(CORE)
 			$(RM) $(NCUR)
 			$(RM) $(SFML)
 			$(RM) $(NIBBLER)
+			$(RM) $(PACMAN)
 			$(RM) $(SDL2)
 
 re:			fclean all

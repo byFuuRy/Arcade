@@ -14,6 +14,7 @@
 
 #include "IRenderer.hpp"
 #include "SDLSprite.hpp"
+#include "Color.hpp"
 
 class SDLRenderer : public IRenderer {
 public:
