@@ -43,7 +43,8 @@ void SFMLRenderer::drawText(const std::string &text, uint8_t size, const Vector 
     sfText.setFont(_font);
     sfText.setString(text);
     sfText.setPosition(sfVector2f);
-    sfText.setScale({static_cast<float>(size), static_cast<float>(size)});
+    //sfText.setScale({static_cast<float>(size), static_cast<float>(size)});
+    sfText.setCharacterSize(size);
     _window->draw(sfText);
 }
 

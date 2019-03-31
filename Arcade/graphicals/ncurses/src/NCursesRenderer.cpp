@@ -15,14 +15,15 @@ NCursesRenderer::NCursesRenderer()
 {
     if (initscr() == nullptr)
         throw std::runtime_error("Can't initialize nCurses sreen.");
+    noecho();
+    nodelay(this->_window, true);
+    curs_set(0);
+    keypad(stdscr, true);
+    timeout(0);
+    start_color();
     this->_window = newwin(this->_h, this->_w, (LINES / 2) - (this->_h / 2), (COLS / 2) - (this->_w / 2));
     if (this->_window == nullptr)
         throw std::runtime_error("Can't create nCurses window.");
-    nodelay(this->_window, true);
-    timeout(0);
-    keypad(stdscr, true);
-    curs_set(0);
-    noecho();
 }
 
 NCursesRenderer::~NCursesRenderer()
@@ -45,7 +46,7 @@ void NCursesRenderer::drawRectangle(const Rect &rect, const Color &color, bool f
     for (size_t y = 0; y < rect.size.y * this->_h; y++) {
         for (size_t x = 0; x < rect.size.x * this->_w; x++) {
             mvwaddch(this->_window, rect.pos.y * this->_h + static_cast<double>(y) / this->_h,
-                    rect.pos.x * this->_w + static_cast<double>(x) / this->_w, 'x');
+                rect.pos.x * this->_w + static_cast<double>(x) / this->_w, 0);
         }
     }
     wattroff(this->_window, COLOR_PAIR(this->_colorReference));
@@ -73,9 +74,8 @@ void NCursesRenderer::display()
 void NCursesRenderer::clear()
 {
     werase(this->_window);
-    wresize(this->_window, this->_h, this->_w);
     mvwin(this->_window, (LINES / 2) - (this->_h / 2), (COLS / 2) - (this->_w / 2));
-    //wmove(this->_window, (LINES / 2) - (this->_h / 2), (COLS / 2) - (this->_w / 2));
+    wresize(this->_window, this->_h, this->_w);
     this->_colorReference = 0;
 }
 

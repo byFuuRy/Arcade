@@ -270,13 +270,13 @@ void Core::Menu::printNames(Core &core)
 	this->_focused = (core.getGraphicObject()->getGameKeyState() & IGraphicLib::UP) ? this->setFocused(1) : this->_focused;
 	this->_focused = (core.getGraphicObject()->getGameKeyState() & IGraphicLib::DOWN) ? this->setFocused(-1) : this->_focused;	
 	
-	core.getGraphicObject()->getRenderer().drawText("Graphicals", 8, Vector(0.2, 0.1), Color(255, 255, 255));
+	core.getGraphicObject()->getRenderer().drawText("Graphicals:", 30, Vector(0.2, 0.3), Color(255, 255, 255));
 	for (size_t i = 0; i < this->_graphicName.size(); i++)
-		core.getGraphicObject()->getRenderer().drawText(this->_graphicName[i].first, 5, Vector(0.2, 0.2 + (static_cast<double>(i) / 20)),
+		core.getGraphicObject()->getRenderer().drawText(this->_graphicName[i].first, 28, Vector(0.2, 0.38 + (static_cast<double>(i) / 20)),
 			this->isFocused(this->_graphicName[i].first));
-	core.getGraphicObject()->getRenderer().drawText("Games", 8, Vector(0.7, 0.1), Color(255, 255, 255));
+	core.getGraphicObject()->getRenderer().drawText("Games:", 30, Vector(0.7, 0.3), Color(255, 255, 255));
 	for (size_t i = 0; i < this->_gameName.size(); i++)
-		core.getGraphicObject()->getRenderer().drawText(this->_gameName[i].first, 5, Vector(0.7, 0.2 + (static_cast<double>(i) / 20)),
+		core.getGraphicObject()->getRenderer().drawText(this->_gameName[i].first, 28, Vector(0.7, 0.38 + (static_cast<double>(i) / 20)),
 			this->isFocused(this->_gameName[i].first));
 }
 
