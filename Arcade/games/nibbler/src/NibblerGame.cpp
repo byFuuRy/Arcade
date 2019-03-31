@@ -17,22 +17,18 @@ void NibblerGame::move()
 {
 	switch (this->_direction) {
 		case UP:
-			std::cout << "UP" << std::endl;
 			this->_snake.insert(this->_snake.begin(), Vector(this->_snake.front()._pos.x, this->_snake.front()._pos.y - 1));
 			this->_snake.pop_back();
 			break;
 		case DOWN:
-			std::cout << "DOWN" << std::endl;
 			this->_snake.insert(this->_snake.begin(), Vector(this->_snake.front()._pos.x, this->_snake.front()._pos.y + 1));
 			this->_snake.pop_back();
 			break;
 		case LEFT:
-			std::cout << "LEFT" << std::endl;
 			this->_snake.insert(this->_snake.begin(), Vector(this->_snake.front()._pos.x - 1, this->_snake.front()._pos.y));
 			this->_snake.pop_back();
 			break;
 		case RIGHT:
-			std::cout << "RIGHT" << std::endl;
 			this->_snake.insert(this->_snake.begin(), Vector(this->_snake.front()._pos.x + 1, this->_snake.front()._pos.y));
 			this->_snake.pop_back();
 			break;

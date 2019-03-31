@@ -20,7 +20,7 @@ NCursesRenderer::NCursesRenderer()
         throw std::runtime_error("Can't create nCurses window.");
     nodelay(this->_window, true);
     timeout(0);
-    keypad(this->_window, true);
+    keypad(stdscr, true);
     curs_set(0);
     noecho();
 }
@@ -45,7 +45,7 @@ void NCursesRenderer::drawRectangle(const Rect &rect, const Color &color, bool f
     for (size_t y = 0; y < rect.size.y * this->_h; y++) {
         for (size_t x = 0; x < rect.size.x * this->_w; x++) {
             mvwaddch(this->_window, rect.pos.y * this->_h + static_cast<double>(y) / this->_h,
-                    rect.pos.x * this->_w + static_cast<double>(x) / this->_w, 0);
+                    rect.pos.x * this->_w + static_cast<double>(x) / this->_w, 'x');
         }
     }
     wattroff(this->_window, COLOR_PAIR(this->_colorReference));

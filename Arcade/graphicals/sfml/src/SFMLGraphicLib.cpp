@@ -46,7 +46,7 @@ void SFMLGraphicLib::pollEvents()
             case sf::Keyboard::F3: this->_coreKey |= PREV_GAME_LIB; break;
             case sf::Keyboard::F4: this->_coreKey |= NEXT_GAME_LIB; break;
             case sf::Keyboard::F5: this->_coreKey |= RESTART_GAME; break;
-            case 27: this->_coreKey |= BACK_TO_MENU; break;
+            case sf::Keyboard::Escape: this->_coreKey |= BACK_TO_MENU; break;
             case sf::Keyboard::F9: this->_coreKey |= EXIT; break;
             default: break;
         }
