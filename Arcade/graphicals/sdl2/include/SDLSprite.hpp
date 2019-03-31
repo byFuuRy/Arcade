@@ -23,6 +23,14 @@ public:
 	virtual void setPosAndSize(const Rect &newPosAndSize) override;
 	virtual void setTextureRect(const Rect &newRect) override;
 
+    static SDL_Renderer *getRenderer(void *renderer = nullptr) {
+        static SDL_Renderer *r = nullptr;
+
+        if (renderer)
+            r = static_cast<SDL_Renderer *>(renderer);
+        return (r);
+    };
+
     SDL_Texture *_sprite;
     SDL_Rect _rect;
     SDL_Rect _pos;

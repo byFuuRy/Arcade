@@ -19,35 +19,34 @@ uint8_t SDLGraphicLib::getCoreKeyState() const noexcept
 
 void SDLGraphicLib::pollEvents()
 {
-    sf::Event event;
+    SDL_Event event;
 
     this->_gameKey = 0;
     this->_coreKey = 0;
     this->_close = false;
-    while(this->_renderer._window->pollEvent(event)) {
-        if (event.type == sf::Event::Closed) {
+    while(SDL_PollEvent(&event) > 0) {
+        if (event.type == SDL_QUIT) {
             _close = true;
             continue;
-        } else if (event.type != sf::Event::KeyPressed)
+        } else if (event.type != SDL_KEYDOWN)
             continue;
-        switch (event.key.code)
-        {
-            case sf::Keyboard::Up: this->_gameKey |= UP; break;
-            case sf::Keyboard::Down: this->_gameKey |= DOWN; break;
-            case sf::Keyboard::Left: this->_gameKey |= LEFT; break;
-            case sf::Keyboard::Right: this->_gameKey |= RIGHT; break;
-            case 'x': this->_gameKey |= PRIMARY; break;
-            case 'c': this->_gameKey |= SECONDARY; break;
-            case 'b': this->_gameKey |= START; break;
-            case 'n': this->_gameKey |= SELECT; break;
+        switch (event.key.keysym.sym) {
+            case SDLK_UP: this->_gameKey |= UP; break;
+            case SDLK_DOWN: this->_gameKey |= DOWN; break;
+            case SDLK_LEFT: this->_gameKey |= LEFT; break;
+            case SDLK_RIGHT: this->_gameKey |= RIGHT; break;
+            case SDLK_x: this->_gameKey |= PRIMARY; break;
+            case SDLK_c: this->_gameKey |= SECONDARY; break;
+            case SDLK_b: this->_gameKey |= START; break;
+            case SDLK_n: this->_gameKey |= SELECT; break;
 
-            case sf::Keyboard::F1: this->_coreKey |= PREV_GRAPHICAL_LIB; break;
-            case sf::Keyboard::F2: this->_coreKey |= NEXT_GRAPHICAL_LIB; break;
-            case sf::Keyboard::F3: this->_coreKey |= PREV_GAME_LIB; break;
-            case sf::Keyboard::F4: this->_coreKey |= NEXT_GAME_LIB; break;
-            case sf::Keyboard::F5: this->_coreKey |= RESTART_GAME; break;
+            case SDLK_F1: this->_coreKey |= PREV_GRAPHICAL_LIB; break;
+            case SDLK_F2: this->_coreKey |= NEXT_GRAPHICAL_LIB; break;
+            case SDLK_F3: this->_coreKey |= PREV_GAME_LIB; break;
+            case SDLK_F4: this->_coreKey |= NEXT_GAME_LIB; break;
+            case SDLK_F5: this->_coreKey |= RESTART_GAME; break;
             case 27: this->_coreKey |= BACK_TO_MENU; break;
-            case sf::Keyboard::F9: this->_coreKey |= EXIT; break;
+            case SDLK_F9: this->_coreKey |= EXIT; break;
             default: break;
         }
     }

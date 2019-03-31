@@ -65,9 +65,9 @@ void NibblerGame::tick(IGraphicLib *graphic, double deltaTime)
 void NibblerGame::render(IGraphicLib *graphic)
 {
 	graphic->getRenderer().clear();
-	graphic->getRenderer().drawText("Nibbler", 50, Vector(0.38, 0), Color(255, 255, 255));
-	graphic->getRenderer().drawText("score", 25, Vector(0.01, 0), Color(255, 255, 255));
-	graphic->getRenderer().drawText("best score", 25, Vector(0.82, 0), Color(255, 255, 255));
+	graphic->getRenderer().drawText("Nibbler", 2, Vector(0.38, 0), Color(255, 255, 255));
+	graphic->getRenderer().drawText("score", 1, Vector(0.01, 0), Color(255, 255, 255));
+	graphic->getRenderer().drawText("best score", 1, Vector(0.80, 0), Color(255, 255, 255));
 	for (size_t i = 0; i < this->_snake.size(); i++) {
 		const auto part = this->_snake[i];
 		if (i == 0)

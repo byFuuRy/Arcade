@@ -29,10 +29,8 @@ public:
 
 	SDL_Window *_window = nullptr;
     std::pair<int, int> _size;
-    static SDL_Renderer *_renderer;
+    SDL_Renderer *_renderer;
     TTF_Font *_font;
 };
-
-SDL_Renderer *SDLRenderer::_renderer = nullptr;
 
 #endif /* !NCURSES_RENDERER_HPP_ */
