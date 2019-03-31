@@ -12,7 +12,7 @@ INCLUDES=	-iquote Arcade/core/include -iquote Arcade/common/include
 CORE	=	arcade
 SFML	=	./lib/lib_arcade_sfml.so
 SDL2	=	./lib/lib_arcade_sdl2.so
-NCUR	=	./lib/lib_arcade_ncurses2.so
+NCUR	=	./lib/lib_arcade_ncurses.so
 NIBBLER	=	./games/lib_arcade_nibbler.so
 
 ############ CORE ############

@@ -37,7 +37,7 @@ private:
 		
 		Snake(const Vector&);
 	};
-	void move(IGraphicLib *);
+	void move();
 
 	double _time;
 	double _speed;

@@ -32,57 +32,65 @@ Core::Core(const std::string &libName)
 		this->_error = libName + ": " + "File does not exist.";
 		throw std::runtime_error(this->_error);
 	}
-	addGameLib("./games/lib_arcade_nibbler.so");
-	addGraphicLib("./lib/lib_arcade_sfml.so");
+	addGraphicLib(libPath);
+	addGameLib();
+	this->_graphic._currentObject = getGraphicInstance(this->_graphic._listLib.front());
+	this->_game._currentObject = getGameInstance(this->_game._listLib.front());
 }
 
 void Core::addGraphicLib(const std::string &libName)
 {
-	const auto libPath = realpath(libName.c_str(), nullptr);
+	std::regex r("lib_arcade_(.+)\\.so$");
+	std::smatch match;
 
-	if (libPath == nullptr) {
-		this->_error = libName + ":" + " Library unknown.";
-		throw std::runtime_error(this->_error);
+	this->_graphic._listLib.push_back(libName);
+	for (auto &entry : std::filesystem::directory_iterator(realpath("./lib", nullptr))) {
+		std::string path = entry.path().c_str();
+		if (std::find(this->_graphic._listLib.begin(), this->_graphic._listLib.end(), libName) == this->_graphic._listLib.end()
+			&& std::regex_search(path, match, r))
+        	this->_graphic._listLib.push_back(entry.path().c_str());
 	}
-	if (std::find(this->_graphic._listLib.begin(), this->_graphic._listLib.end(), libPath) == this->_graphic._listLib.end())
-		this->_graphic._listLib.push_back(libPath);
 }
 
-void Core::addGameLib(const std::string &libName)
+void Core::addGameLib()
 {
-	const auto libPath = realpath(libName.c_str(), nullptr);
+	std::regex r("lib_arcade_(.+)\\.so$");
+	std::smatch match;
 
-	if (libPath == nullptr) {
-		this->_error = libName + ":" + " Library unknown.";
-		throw std::runtime_error(this->_error);
+	for (auto &entry : std::filesystem::directory_iterator(realpath("./games", nullptr))) {
+		std::string path = entry.path().c_str();
+		if (std::regex_search(path, match, r))
+        	this->_game._listLib.push_back(entry.path().c_str());
 	}
-	if (std::find(this->_game._listLib.begin(), this->_game._listLib.end(), libPath) == this->_game._listLib.end())
-		this->_game._listLib.push_back(libPath);
 }
 
-IGraphicLib *Core::getGraphicLibInstance() const
+IGraphicLib *Core::getGraphicInstance(const std::string &libPath)
 {
 	using getInstance = IGraphicLib *();
 	getInstance *f;
-
+	
+	this->_graphic._currentLib = dlopen(libPath.c_str(), RTLD_LAZY);
 	if (this->_graphic._currentLib == nullptr)
-		return nullptr;
-	f = reinterpret_cast<getInstance *>(dlsym(this->_graphic._currentLib, "getGraphicalInstance"));
+		throw std::runtime_error(dlerror());
+	f = reinterpret_cast<getInstance*>(dlsym(this->_graphic._currentLib, "getGraphicalInstance"));
 	if (f == nullptr)
-		return nullptr;
+		throw std::runtime_error(dlerror());
+	this->_graphic._currentPath = libPath;
 	return f();
 }
 
-IGame *Core::getGameInstance() const
+IGame *Core::getGameInstance(const std::string &libPath)
 {
 	using getInstance = IGame *();
 	getInstance *f;
 
+	this->_game._currentLib = dlopen(libPath.c_str(), RTLD_LAZY);
 	if (this->_game._currentLib == nullptr)
-		throw std::runtime_error("Current graphic library is unknown.");
+		throw std::runtime_error(dlerror());
 	f = reinterpret_cast<getInstance*>(dlsym(this->_game._currentLib, "getGameInstance"));
 	if (f == nullptr)
-		throw std::runtime_error("Can't load the game instance.");
+		throw std::runtime_error(dlerror());
+	this->_game._currentPath = libPath;
 	return f();
 }
 
@@ -94,12 +102,13 @@ void Core::nextGraphicLib()
 		dlclose(this->_graphic._currentLib);
 	auto it = std::find(this->_graphic._listLib.begin(), this->_graphic._listLib.end(), this->_graphic._currentPath);
 	if (it + 1 == this->_graphic._listLib.end())
-		loadGraphic(this->_graphic._listLib.front());
+		this->_graphic._currentObject = this->getGraphicInstance(this->_graphic._listLib.front());
 	else
-		loadGraphic(*(it + 1));
-	this->_graphic._currentObject = getGraphicLibInstance();
-	if (this->_graphic._currentObject == nullptr)
-		throw std::runtime_error("Can't load graphic lib");
+		this->_graphic._currentObject = getGraphicInstance(*(it + 1));
+	if (this->_graphic._currentObject == nullptr) {
+		this->_error = *(it + 1) + ": " + "Can't load the graphic library.";
+		throw std::runtime_error(this->_error);
+	}
 }
 
 void Core::nextGameLib()
@@ -110,28 +119,13 @@ void Core::nextGameLib()
 		dlclose(this->_game._currentLib);
 	auto it = std::find(this->_game._listLib.begin(), this->_game._listLib.end(), this->_game._currentPath);
 	if (it + 1 == this->_game._listLib.end())
-		loadGraphic(this->_game._listLib.front());
+		this->_game._currentObject = this->getGameInstance(this->_game._listLib.front());
 	else
-		loadGraphic(*(it + 1));
-	this->_game._currentObject = getGameInstance();
-	if (this->_graphic._currentObject == nullptr)
-		throw std::runtime_error("Can't load game lib");
-}
-
-void Core::loadGraphic(const std::string &libPath)
-{
-	this->_graphic._currentLib = dlopen(libPath.c_str(), RTLD_LAZY);
-	if (this->_graphic._currentLib == nullptr)
-		throw std::runtime_error(dlerror());
-	this->_graphic._currentPath = libPath;
-}
-
-void Core::loadGame(const std::string &libPath)
-{
-	this->_game._currentLib = dlopen(libPath.c_str(), RTLD_LAZY);
-	if (this->_game._currentLib == nullptr)
-		throw std::runtime_error(dlerror());
-	this->_game._currentPath = libPath;
+		this->_game._currentObject = getGameInstance(*(it + 1));
+	if (this->_game._currentObject == nullptr) {
+		this->_error = *(it + 1) + ": " + "Can't load the game.";
+		throw std::runtime_error(this->_error);
+	}
 }
 
 IGraphicLib *Core::getGraphicObject() const
@@ -145,12 +139,7 @@ IGame *Core::getGameObject() const
 }
 
 void Core::mainLoop()
-{
-	loadGraphic(this->_graphic._listLib.front());
-	loadGame(this->_game._listLib.front());
-	this->_graphic._currentObject = getGraphicLibInstance();
-	this->_game._currentObject = getGameInstance();
-	
+{	
 	getGameObject()->init(getGraphicObject());
 	while (!getGraphicObject()->isCloseRequested() && !getGameObject()->isCloseRequested()) {
 		auto start = std::chrono::system_clock::now();

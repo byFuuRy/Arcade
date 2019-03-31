@@ -22,12 +22,10 @@ public:
 	void mainLoop();
 
 private:
-	void loadGraphic(const std::string &libPath);
-	void loadGame(const std::string &libPath);
-    IGraphicLib *getGraphicLibInstance() const;
-	IGame *getGameInstance() const;
+    IGraphicLib *getGraphicInstance(const std::string &libPath);
+	IGame *getGameInstance(const std::string &libPath);
 	void addGraphicLib(const std::string &lib_name);
-	void addGameLib(const std::string &lib_name);
+	void addGameLib();
 	void nextGraphicLib();
 	void nextGameLib();
 	IGraphicLib *getGraphicObject() const;

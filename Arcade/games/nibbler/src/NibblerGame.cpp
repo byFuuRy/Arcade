@@ -13,26 +13,26 @@ NibblerGame::Snake::Snake(const Vector &vec)
 	: _pos(vec)
 {}
 
-void NibblerGame::move(IGraphicLib *graphic)
+void NibblerGame::move()
 {
-	this->_direction = (graphic->getGameKeyState() & IGraphicLib::UP) ? this->UP : this->_direction;
-	this->_direction = (graphic->getGameKeyState() & IGraphicLib::DOWN) ? this->DOWN : this->_direction;
-	this->_direction = (graphic->getGameKeyState() & IGraphicLib::LEFT) ? this->LEFT : this->_direction;
-	this->_direction = (graphic->getGameKeyState() & IGraphicLib::RIGHT) ? this->RIGHT : this->_direction;
 	switch (this->_direction) {
 		case UP:
+			std::cout << "UP" << std::endl;
 			this->_snake.insert(this->_snake.begin(), Vector(this->_snake.front()._pos.x, this->_snake.front()._pos.y - 1));
 			this->_snake.pop_back();
 			break;
 		case DOWN:
+			std::cout << "DOWN" << std::endl;
 			this->_snake.insert(this->_snake.begin(), Vector(this->_snake.front()._pos.x, this->_snake.front()._pos.y + 1));
 			this->_snake.pop_back();
 			break;
 		case LEFT:
+			std::cout << "LEFT" << std::endl;
 			this->_snake.insert(this->_snake.begin(), Vector(this->_snake.front()._pos.x - 1, this->_snake.front()._pos.y));
 			this->_snake.pop_back();
 			break;
 		case RIGHT:
+			std::cout << "RIGHT" << std::endl;
 			this->_snake.insert(this->_snake.begin(), Vector(this->_snake.front()._pos.x + 1, this->_snake.front()._pos.y));
 			this->_snake.pop_back();
 			break;
@@ -55,9 +55,13 @@ void NibblerGame::init(IGraphicLib *)
 
 void NibblerGame::tick(IGraphicLib *graphic, double deltaTime)
 {
+	this->_direction = (graphic->getGameKeyState() & IGraphicLib::UP) ? this->UP : this->_direction;
+	this->_direction = (graphic->getGameKeyState() & IGraphicLib::DOWN) ? this->DOWN : this->_direction;
+	this->_direction = (graphic->getGameKeyState() & IGraphicLib::LEFT) ? this->LEFT : this->_direction;
+	this->_direction = (graphic->getGameKeyState() & IGraphicLib::RIGHT) ? this->RIGHT : this->_direction;
 	this->_time += deltaTime;
 	if (this->_time >= this->_speed) {
-		this->move(graphic);
+		this->move();
 		this->_time -= this->_speed;
 	}
 }
