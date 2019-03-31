@@ -21,7 +21,7 @@ struct Rect final {
 
 	bool operator==(const Rect &rhs) const noexcept;
 	bool operator!=(const Rect &rhs) const noexcept;
-	Rect &operator=(const Rect &rhs) noexcept;
+	Rect &operator=(const Rect &rhs) noexcept = default;
 };
 
 #endif /* !RECT_HPP_ */

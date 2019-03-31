@@ -162,6 +162,7 @@ void Core::nextGameLib()
 		this->_error = *(it + 1) + ": " + "Can't load the game.";
 		throw std::runtime_error(this->_error);
 	}
+	this->getGameObject()->init(this->getGraphicObject());
 }
 
 void Core::prevGameLib()
@@ -202,6 +203,7 @@ void Core::restartGame()
 		dlclose(this->_game._currentLib);
 	}
 	this->_game._currentObject = this->getGameInstance(this->_game._currentPath);
+	this->getGameObject()->init(this->getGraphicObject());
 }
 
 bool Core::performAction()
@@ -317,14 +319,14 @@ void Core::mainLoop()
 		auto start = std::chrono::system_clock::now();
 		if (!this->performAction())
 			return;
-		if (this->_menu._active) {
+		if (this->_menu._active)
 			this->_menu.showMenu(*this);
-			continue;
+		else {
+			getGameObject()->tick(getGraphicObject(), this->_deltaTime);
+			getGameObject()->render(getGraphicObject());
+			auto end = std::chrono::system_clock::now();
+			std::chrono::duration<double> elapsed = end - start;
+			this->_deltaTime = elapsed.count();
 		}
-		getGameObject()->tick(getGraphicObject(), this->_deltaTime);
-		getGameObject()->render(getGraphicObject());
-		auto end = std::chrono::system_clock::now();
-		std::chrono::duration<double> elapsed = end - start;
-		this->_deltaTime = elapsed.count();
 	}
 }

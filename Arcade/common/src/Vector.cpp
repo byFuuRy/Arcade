@@ -7,6 +7,12 @@
 
 #include "Vector.hpp"
 
+Vector::Vector() noexcept
+{
+    this->x = 0;
+    this->y = 0;
+}
+
 Vector::Vector(double x, double y) noexcept
 {
     this->x = x;

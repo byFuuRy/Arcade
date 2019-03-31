@@ -26,10 +26,12 @@ public:
 	NibblerGame();
 
 	void init(IGraphicLib *);
-	void tick(IGraphicLib *, double deltaTime);   // Logic / Physics
-	void render(IGraphicLib *);                   // Draw stuff
-	void reloadResources(IGraphicLib *);          // Graphic lib changed
+	void tick(IGraphicLib *, double deltaTime);
+	void render(IGraphicLib *);
+	void reloadResources(IGraphicLib *);
 	bool isCloseRequested() const noexcept;
+	bool isGameFinished() const noexcept;
+	size_t getScore() const noexcept;
 
 private:
 	struct Snake {
@@ -37,13 +39,25 @@ private:
 		
 		Snake(const Vector&);
 	};
-	void move();
+	void move() noexcept;
+	void popFood() noexcept;
+	void isFoodAte() noexcept;
+	void generateMap() noexcept;
+	void displaySnake(IGraphicLib *graphic) const noexcept;
+	void displayMap(IGraphicLib *graphic) const noexcept;
+	void displayGameOver(IGraphicLib *graphic) noexcept;
+	void isGameOver() noexcept;
 
+	size_t _score;
+	size_t _bestScore;
+	bool _isGameFinished;
 	double _time;
 	double _speed;
 	double _size;
+	Vector _food;
 	Direction _direction;
 	std::vector<Snake> _snake;
+	std::vector<Vector> _obstacles;
 };
 
 extern "C"

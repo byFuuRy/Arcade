@@ -111,8 +111,8 @@ fclean:		clean
 			$(RM) $(CORE)
 			$(RM) $(NCUR)
 			$(RM) $(SFML)
-			$(RM) $(SDL2)
 			$(RM) $(NIBBLER)
+			$(RM) $(SDL2)
 
 re:			fclean all
 
